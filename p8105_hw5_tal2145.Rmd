@@ -8,6 +8,7 @@ output: github_document
 library(viridis)
 library(tidyverse)
 library(readr)
+library(ggridges)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -56,7 +57,7 @@ iris_no_missing = map_dfr(iris_with_missing, fix_missing)
 
 ## Problem 2
 
-**Loading and tidying control and experimental arm data** 
+#### Part 1: Loading and tidying control and experimental arm data** 
 
 * reading in all files from each subject into one dataframe
 * tidying data to include 4 columns with study arm, id, week and 
@@ -69,7 +70,7 @@ read_files = function(file) {
 
 path_base = "./data/"
 
-join_data = 
+study_data = 
   tibble(
     file_name = list.files(path = "./data/"),
     all_files = str_c(path_base, file_name)) %>% 
@@ -90,3 +91,20 @@ join_data =
 )
 ```
 
+#### Part 2: Making a spaghetti plot showing observations over time and differences between study arms
+
+```{r}
+study_data %>% 
+  group_by(study_arm, subject_id) %>% 
+  
+  ggplot(aes(x = week, y = observation, color = study_arm, group = interaction(study_arm, subject_id))) +
+  #geom_point() + 
+  geom_line() +
+    labs(
+   title = "Subject Observations Over Time",
+   x = "Week",
+   y = "Observation"
+  ) 
+```
+
+Looking at the spaghetti plot where yellow represents the experimental arm and purple represents the control arm, we see that the values of weekly observation for the experimental subjects is higher on average than that of the control arm. 
