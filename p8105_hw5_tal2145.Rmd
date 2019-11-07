@@ -7,6 +7,7 @@ output: github_document
 ```{r setup, include=FALSE}
 library(viridis)
 library(tidyverse)
+library(readr)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -41,7 +42,7 @@ iris_with_missing = iris %>%
 * missing numeric values are filled in with the mean of non-missing values 
 * missing character values are filled in with `"virginica"
 
-```{r}
+```{r no_missing_df}
 fix_missing = function(x) {
   if (is.numeric(x)) {
     replace_na(x, mean(x, na.rm = TRUE))
@@ -50,6 +51,42 @@ fix_missing = function(x) {
   }
 }
 
-output = map_dfr(iris_with_missing, fix_missing)
+iris_no_missing = map_dfr(iris_with_missing, fix_missing)
+```
+
+## Problem 2
+
+**Loading and tidying control and experimental arm data** 
+
+* creating dataframe with all file names
+* reading in all files from each subject
+* 
+
+```{r study_data_load}
+
+read_files = function(file) {
+  study_data = read_csv(file)
+}
+
+path_base = "./data/"
+
+join_data = 
+  tibble(
+    file_name = list.files(path = "./data/"),
+    all_files = str_c(path_base, file_name)) %>% 
+  mutate(study_data = map(all_files, read_files)) %>% 
+  unnest() %>% 
+  select(-all_files) 
+  
+
+
+
+
+
+
+
+
+
+
 ```
 
