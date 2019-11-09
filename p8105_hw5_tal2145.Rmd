@@ -114,25 +114,42 @@ Looking at the spaghetti plot where yellow represents the experimental arm and p
 ## Problem 3
 ***
 
-#### Part 1: 
+#### Part 1: Setting up a function for a simple linear regression
+
+* creating linear model with a  β0 of 2, a variance of 50
+* using `broom::tidy` to clean the linear model output and keep only the estimate for  β0 and the p-value
 
 ```{r}
 set.seed(1)
 
 sim_regression = function(n, beta0 = 2, beta1 = 0) {
-  
+   
   sim_data = tibble(
-    x = rnorm(n, mean = 0, sd = 50),
+    x = rnorm(n, mean = 0, sd = 50^0.5),
     y = beta0 + beta1 * x + rnorm(n, 0, 1)
   )
   
-  ls_fit = lm(y ~ x, data = sim_data)
+  ls_fit = lm(y  ~ x, data = sim_data)
   
-  tibble(
-    beta0_hat = coef(ls_fit)[1],
-    beta1_hat = coef(ls_fit)[2]
-  )
+  ls_fit %>% 
+    broom::tidy() %>% 
+    filter(term == "x") %>%
+    select(estimate, p.value)
+  
 }
-
 ```
+
+#### Part 2: Running a simulation 10000 times for varying values of β1
+
+```{r}
+sim_results = 
+  tibble(beta1 = c(0, 1, 2, 3, 4, 5, 6)) %>% 
+  mutate(
+    output_lists = map(.x = beta1, ~rerun(10000, sim_regression(n = 30))),
+    estimate_dfs = map(output_lists, bind_rows)) %>%
+  select(-output_lists) %>% 
+  unnest(estimate_dfs)
+```
+
+
 
