@@ -172,4 +172,43 @@ sim_results %>%
 
 Looking at the plot above, we see that as effect size or β1 increases, power, or probability of correctly rejecting the null hypothesis also increases. 
 
+#### Part 4: Plotting 
+
+Make a plot showing the average estimate of β̂ 1 on the y axis and the true value of β1 on the x axis. Make a second plot (or overlay on the first) the average estimate of β̂ 1 only in samples for which the null was rejected on the y axis and the true value of β1 on the x axis. Is the sample average of β̂ 1 across tests for which the null is rejected approximately equal to the true value of β1? Why or why not?
+
+```{r}
+sim_results %>% 
+  group_by(beta1) %>% 
+  mutate(
+    mean_beta1_hat = mean(estimate)
+  ) %>% 
+  distinct(beta1, mean_beta1_hat) %>% 
+  
+  ggplot(aes(x = beta1, y = mean_beta1_hat)) +
+  geom_col() +
+  labs(
+    title = "Comparing the True Value of β1 to the Mean Estimated β1",
+    x = "True β1",
+    y = "Estimated β1"
+  )
+
+sim_results %>% 
+  filter(p.value < 0.05) %>%   group_by(beta1) %>% 
+  mutate(
+    mean_beta1_hat_reject = mean(estimate)
+  ) %>% 
+  distinct(beta1, mean_beta1_hat_reject) %>%
+ 
+  ggplot(aes(x = beta1, y = mean_beta1_hat_reject)) +
+  geom_col() +
+  labs(
+    title = "Comparing the True Value of β1 to the Mean Estimated β1 Among Those Samples Where the Null was Rejected",
+    x = "True β1",
+    y = "Estimated β1"
+  ) 
+```
+
+
+
+
 
