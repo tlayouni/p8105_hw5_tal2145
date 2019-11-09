@@ -117,7 +117,7 @@ Looking at the spaghetti plot where yellow represents the experimental arm and p
 #### Part 1: Setting up a function for a simple linear regression
 
 * creating linear model with a  β0 of 2, a variance of 50
-* using `broom::tidy` to clean the linear model output and keep only the estimate for  β0 and the p-value
+* using `broom::tidy` to clean the linear model output and keep only the estimate for  β1 and the p-value
 
 ```{r}
 set.seed(1)
