@@ -27,6 +27,7 @@ theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
 ## Problem 1
+***
 
 **Loading in `iris` dataset with missing values**
 
@@ -56,6 +57,7 @@ iris_no_missing = map_dfr(iris_with_missing, fix_missing)
 ```
 
 ## Problem 2
+***
 
 #### Part 1: Loading and tidying control and experimental arm data** 
 
@@ -107,4 +109,30 @@ study_data %>%
   ) 
 ```
 
-Looking at the spaghetti plot where yellow represents the experimental arm and purple represents the control arm, we see that the values of weekly observation for the experimental subjects is higher on average than that of the control arm. 
+Looking at the spaghetti plot where yellow represents the experimental arm and purple represents the control arm, we see that the values of weekly observations for the experimental subjects is higher on average than that of the control arm. There appears to be a positive trend in observation value and increasing week of observation among the experimental subjects. At the end of the observed time, all participants in the experimental arm have higher observation values than all of the controls. 
+
+## Problem 3
+***
+
+#### Part 1: 
+
+```{r}
+set.seed(1)
+
+sim_regression = function(n, beta0 = 2, beta1 = 0) {
+  
+  sim_data = tibble(
+    x = rnorm(n, mean = 0, sd = 50),
+    y = beta0 + beta1 * x + rnorm(n, 0, 1)
+  )
+  
+  ls_fit = lm(y ~ x, data = sim_data)
+  
+  tibble(
+    beta0_hat = coef(ls_fit)[1],
+    beta1_hat = coef(ls_fit)[2]
+  )
+}
+
+```
+
